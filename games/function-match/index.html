@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Introduction to Functions — Tile Match</title>
+<style>
+:root{--bg:#101216;--panel:#171a20;--text:#f4f5f7;--muted:#b9c0cc;--line:#f4f5f7;--light:#f7f7f7;--shadow:0 10px 30px rgba(0,0,0,.28);--pair0:#ffb3ba;--pair1:#bae1ff;--pair2:#baffc9;--pair3:#ffffba;--pair4:#d7baff;--pair5:#ffdfba;--pair6:#baf4e8;--pair7:#ffbadd;--pair8:#c9c9ff;--pair9:#dff5a8;--pair10:#ffc9de;--pair11:#b9e3f0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 12% 8%,rgba(255,255,255,.06),transparent 28%),radial-gradient(circle at 88% 90%,rgba(255,255,255,.04),transparent 30%),var(--bg);color:var(--text)}
+.app{max-width:1220px;margin:auto;padding:22px}.topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}.titlewrap h1{margin:0;font-size:clamp(26px,4vw,46px);letter-spacing:.5px}.titlewrap p{margin:5px 0 0;color:var(--muted);font-size:15px}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}button{border:1px solid var(--line);background:transparent;color:var(--text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}button:hover{background:#fff;color:#111}
+.stats{display:grid;grid-template-columns:repeat(7,minmax(90px,1fr));gap:10px;margin-bottom:15px}.stat{background:var(--panel);border:1px solid #333943;border-radius:12px;padding:11px 13px;box-shadow:var(--shadow)}.stat .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}.stat .value{font-size:22px;font-weight:800;margin-top:2px}.message{background:var(--panel);border:1px solid #333943;border-radius:12px;padding:11px 14px;margin-bottom:14px;color:#e9ecf1;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:11px}.card{position:relative;min-height:136px;perspective:900px;cursor:pointer;user-select:none;padding:0}.card-inner{position:absolute;inset:0;transition:transform .42s ease;transform-style:preserve-3d}.card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px solid #3a404a;box-shadow:var(--shadow);overflow:hidden}.front{background:linear-gradient(145deg,#20242c,#15181e)}.front .mark{width:54px;height:54px;border:2px solid #fff;border-radius:14px;display:grid;place-items:center;font-size:30px;font-weight:900}.back{transform:rotateY(180deg);background:#f7f7f7;color:#111;padding:12px}.card.matched .back{outline:4px solid #111;outline-offset:-5px}
+  .card.matched[data-pair-color="0"] .back{background:var(--pair0)}
+  .card.matched[data-pair-color="1"] .back{background:var(--pair1)}
+  .card.matched[data-pair-color="2"] .back{background:var(--pair2)}
+  .card.matched[data-pair-color="3"] .back{background:var(--pair3)}
+  .card.matched[data-pair-color="4"] .back{background:var(--pair4)}
+  .card.matched[data-pair-color="5"] .back{background:var(--pair5)}
+  .card.matched[data-pair-color="6"] .back{background:var(--pair6)}
+  .card.matched[data-pair-color="7"] .back{background:var(--pair7)}
+  .card.matched[data-pair-color="8"] .back{background:var(--pair8)}
+  .card.matched[data-pair-color="9"] .back{background:var(--pair9)}
+  .card.matched[data-pair-color="10"] .back{background:var(--pair10)}
+  .card.matched[data-pair-color="11"] .back{background:var(--pair11)}.term{font-size:17px;font-weight:900;line-height:1.12}.sub{font-size:12px;margin-top:7px;line-height:1.25}.math{font-family:"Courier New",monospace;font-weight:800}.pairtag{position:absolute;top:7px;right:8px;font-size:9px;letter-spacing:.8px;color:#5e646d;text-transform:uppercase}.mini-table{margin:auto;border-collapse:collapse;font-size:12px}.mini-table th,.mini-table td{border:1px solid #111;padding:3px 8px}.mapping,.graph{width:100%;height:92px;display:block;margin:auto}
+.reference{display:none;background:#f7f7f7;color:#111;border-radius:16px;padding:18px;border:2px solid #111;margin-bottom:14px}.reference.open{display:block}.reference h2{margin:0 0 10px;font-size:23px}.refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.refbox{border:1px solid #111;border-radius:10px;padding:10px}.refbox b{display:block;margin-bottom:4px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.modalbox{max-width:560px;width:100%;background:#f7f7f7;color:#111;border-radius:18px;padding:24px;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.55)}.modalbox h2{font-size:34px;margin:0 0 8px}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.result{border:1px solid #111;border-radius:10px;padding:10px}.result strong{display:block;font-size:25px}.modalbox button{border-color:#111;color:#111}.modalbox button:hover{background:#111;color:#fff}
+@media(max-width:980px){.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:720px){.grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.refgrid{grid-template-columns:1fr}.card{min-height:126px}}@media(max-width:480px){.app{padding:12px}.grid{grid-template-columns:repeat(2,1fr);gap:8px}.card{min-height:120px}.term{font-size:15px}}
+
+@keyframes reviewMatePulse{
+  0%,100%{
+    transform:rotateY(180deg) scale(1);
+    box-shadow:0 0 0 3px #111, 0 10px 30px rgba(0,0,0,.28);
+  }
+  50%{
+    transform:rotateY(180deg) scale(1.07);
+    box-shadow:0 0 0 8px #111, 0 0 0 14px rgba(255,255,255,.95), 0 14px 38px rgba(0,0,0,.4);
+  }
+}
+.card.review-pulse .back{
+  animation:reviewMatePulse .65s ease-in-out infinite !important;
+  z-index:50;
+}
+.card.review-pulse{
+  z-index:50;
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="titlewrap"><h1>Introduction to Functions</h1><p>Tile Match • Match each idea with the correct representation or description.</p></div>
+    <div class="controls"><button id="referenceBtn">Reference Sheet</button><button id="newGameBtn">New Game</button>
+<button id="leaderboardBtn">Leaderboard</button></div>
+  </div>
+
+  <section id="reference" class="reference"><h2>Quick Reference</h2><div class="refgrid">
+    <div class="refbox"><b>Function</b>Every input has exactly one output. Outputs may repeat. An input cannot have more than 1 output.</div>
+    <div class="refbox"><b>Table / Ordered Pairs</b>Look at the input column or x-values. Ask: Does any input have more than 1 output?</div>
+    <div class="refbox"><b>Vertical Line Test</b>If a vertical line intersects the graph more than once, the graph is not a function.</div>
+    <div class="refbox"><b>Domain</b>Input = x-values = left/right. Write with inequalities when appropriate.</div>
+    <div class="refbox"><b>Range</b>Output = y-values = down/up. Write with inequalities when appropriate.</div>
+    <div class="refbox"><b>Variables</b>Independent = input = x. Dependent = output = y.</div>
+  </div></section>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Round</div><div class="value"><span id="roundNum">1</span>/2</div></div>
+    <div class="stat"><div class="label">Matches</div><div class="value"><span id="matches">0</span>/6</div></div>
+    <div class="stat"><div class="label">Moves</div><div class="value" id="moves">0</div></div>
+    <div class="stat"><div class="label">Misses</div><div class="value"><span id="misses">0</span>/16</div></div>
+    <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div></div>
+    <div class="stat"><div class="label">Accuracy</div><div class="value" id="accuracy">100%</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="timer">0:00</div></div>
+  </div>
+  <div class="message" id="message">Choose two tiles that belong together.</div>
+  <main class="grid" id="grid"></main>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox"><h2>Board Cleared!</h2><p>You completed both rounds and matched all 12 function concepts.</p><div class="results"><div class="result"><span>Time</span><strong id="finalTime">0:00</strong></div><div class="result"><span>Moves</span><strong id="finalMoves">0</strong></div><div class="result"><span>Accuracy</span><strong id="finalAccuracy">100%</strong></div></div><button id="reviewGame">Review Completed Game</button>
+    <button id="playAgain">Play Again</button></div></div>
+
+
+
+<div class="modal" id="playerModal">
+  <div class="modalbox">
+    <h2>Challenge Player</h2>
+    <p>Enter your information before starting a scored Challenge game. Matches earn 10 points and remove one miss; misses cost 3 points.</p>
+    <div style="max-width:360px;margin:16px auto;text-align:left">
+      <label style="display:block;font-weight:800;margin-bottom:6px">Name</label>
+      <input id="studentName" maxlength="40" autocomplete="name" style="width:100%;padding:12px;border:2px solid #111;border-radius:10px;font-size:1rem;margin-bottom:14px">
+      <label style="display:block;font-weight:800;margin-bottom:6px">Period</label>
+      <select id="studentPeriod" style="width:100%;padding:12px;border:2px solid #111;border-radius:10px;font-size:1rem">
+        <option value="">Select period</option><option value="0">Period 0</option><option value="3">Period 3</option><option value="4">Period 4</option><option value="7">Period 7</option>
+      </select>
+      <div id="playerError" style="margin-top:10px;font-weight:800"></div>
+    </div>
+    <button id="startChallenge">Start Challenge</button>
+  </div>
+</div>
+<div class="modal" id="leaderboardModal">
+  <div class="modalbox" style="max-width:760px">
+    <h2>Leaderboard</h2>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px">
+      <button class="lbFilter" data-period="all">Overall</button>
+      <button class="lbFilter" data-period="0">Period 0</button>
+      <button class="lbFilter" data-period="3">Period 3</button>
+      <button class="lbFilter" data-period="4">Period 4</button>
+      <button class="lbFilter" data-period="7">Period 7</button>
+    </div>
+    <div id="leaderboardBody">Loading…</div>
+    <button id="closeLeaderboard" style="margin-top:14px">Close</button>
+  </div>
+</div>
+
+<div class="modal show" id="modeModal">
+  <div class="modalbox">
+    <h2>Choose Your Mode</h2>
+    <p><strong>Practice</strong> keeps every tile revealed. Match the pairs with no score, timer, miss limit, or penalty.</p>
+    <p><strong>Challenge</strong> uses hidden tiles, scoring, and the 16-miss FAIL limit.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+      <button id="practiceMode">Practice</button>
+      <button id="challengeMode">Challenge</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="failModal">
+  <div class="modalbox">
+    <h2>FAIL</h2>
+    <p>You reached the limit of <strong>16 incorrect matches</strong>.</p>
+    <p>Use the reference sheet, then reset for a new shuffled board.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <button id="resetAfterFail">Reset &amp; Try Again</button>
+      <button id="quitAfterFail">Quit Game</button>
+    </div>
+  </div>
+
+<script>
+const pairs=[
+{id:"function-definition",a:`<div><div class="term">FUNCTION</div><div class="sub">What rule must be true?</div></div>`,b:`<div><div class="term">Every input has exactly one output.</div><div class="sub">Outputs may repeat.</div></div>`},
+{id:"domain",a:`<div><div class="term">DOMAIN</div><div class="sub">Which values?</div></div>`,b:`<div><div class="term">INPUT = x-values</div><div class="sub">Think LEFT ↔ RIGHT</div></div>`},
+{id:"range",a:`<div><div class="term">RANGE</div><div class="sub">Which values?</div></div>`,b:`<div><div class="term">OUTPUT = y-values</div><div class="sub">Think DOWN ↕ UP</div></div>`},
+{id:"independent",a:`<div><div class="term">INDEPENDENT VARIABLE</div></div>`,b:`<div><div class="term">INPUT = x</div><div class="sub">The value you choose or control.</div></div>`},
+{id:"dependent",a:`<div><div class="term">DEPENDENT VARIABLE</div></div>`,b:`<div><div class="term">OUTPUT = y</div><div class="sub">Its value depends on the input.</div></div>`},
+{id:"table-not-function",a:`<table class="mini-table"><tr><th>x</th><th>y</th></tr><tr><td>2</td><td>1</td></tr><tr><td>2</td><td>6</td></tr><tr><td>5</td><td>9</td></tr></table>`,b:`<div><div class="term">NOT A FUNCTION</div><div class="sub">Input 2 has more than 1 output.</div></div>`},
+{id:"mapping-function",a:`<svg class="mapping" viewBox="0 0 180 92"><text x="28" y="10" font-size="9">INPUT</text><text x="126" y="10" font-size="9">OUTPUT</text><circle cx="34" cy="28" r="10" fill="white" stroke="black"/><text x="31" y="32" font-size="11">1</text><circle cx="34" cy="52" r="10" fill="white" stroke="black"/><text x="31" y="56" font-size="11">2</text><circle cx="34" cy="76" r="10" fill="white" stroke="black"/><text x="31" y="80" font-size="11">3</text><circle cx="145" cy="35" r="10" fill="white" stroke="black"/><text x="142" y="39" font-size="11">5</text><circle cx="145" cy="68" r="10" fill="white" stroke="black"/><text x="142" y="72" font-size="11">7</text><line x1="44" y1="28" x2="135" y2="35" stroke="black"/><line x1="44" y1="52" x2="135" y2="68" stroke="black"/><line x1="44" y1="76" x2="135" y2="68" stroke="black"/></svg>`,b:`<div><div class="term">FUNCTION</div><div class="sub">Two inputs may share the same output.</div></div>`},
+{id:"vertical-line-not",a:`<svg class="graph" viewBox="0 0 180 92"><line x1="18" y1="46" x2="164" y2="46" stroke="black"/><line x1="90" y1="8" x2="90" y2="84" stroke="black"/><path d="M145,12 Q72,46 145,80" fill="none" stroke="black" stroke-width="2.2"/><line x1="128" y1="8" x2="128" y2="84" stroke="black" stroke-width="2" stroke-dasharray="5,4"/><circle cx="128" cy="22" r="2.5" fill="black"/><circle cx="128" cy="70" r="2.5" fill="black"/></svg>`,b:`<div><div class="term">NOT A FUNCTION</div><div class="sub">A vertical line intersects the graph twice.</div></div>`},
+{id:"vertical-line-function",a:`<svg class="graph" viewBox="0 0 180 92"><line x1="18" y1="46" x2="164" y2="46" stroke="black"/><line x1="90" y1="8" x2="90" y2="84" stroke="black"/><path d="M32,76 Q90,8 150,76" fill="none" stroke="black" stroke-width="2.2"/><line x1="126" y1="8" x2="126" y2="84" stroke="black" stroke-width="2" stroke-dasharray="5,4"/><circle cx="126" cy="37" r="2.5" fill="black"/></svg>`,b:`<div><div class="term">FUNCTION</div><div class="sub">The vertical line intersects the graph once.</div></div>`},
+{id:"domain-ineq",a:`<div><div class="term math">x ≥ -2</div><div class="sub">What does this describe?</div></div>`,b:`<div><div class="term">DOMAIN</div><div class="sub">Starts at -2 and continues right.</div></div>`},
+{id:"range-ineq",a:`<div><div class="term math">y ≤ -2</div><div class="sub">What does this describe?</div></div>`,b:`<div><div class="term">RANGE</div><div class="sub">Highest y-value is -2; continues downward.</div></div>`},
+{id:"real-world",a:`<div><div class="term">Number of Tickets × Price per Ticket</div><div class="sub">= Total Cost</div></div>`,b:`<div><div class="term">Number of Tickets = independent</div><div class="sub">Total Cost = dependent</div></div>`}
+];
+const pairColorIndex={};pairs.forEach((p,i)=>pairColorIndex[p.id]=i);
+const FAIL_LIMIT=16;
+const LEADERBOARD_URL="https://script.google.com/a/macros/hoover.k12.al.us/s/AKfycbzyOqS3px87RgkzK5QZKY0YBsVdSEfefImamARZFgIVpeqzChT9Rjp2zTSM7BO1kTgl/exec";
+let deck=[],first=null,second=null,lock=false,moves=0,matches=0,totalMatches=0,attempts=0,totalWrong=0,misses=0,startTime=null,timerHandle=null,started=false,reviewMode=false,gameMode=null,playerName='',playerPeriod='',score=0,round=1,roundPairs=[];
+const roundEl=document.getElementById("roundNum"),grid=document.getElementById("grid"),msg=document.getElementById("message"),matchesEl=document.getElementById("matches"),movesEl=document.getElementById("moves"),missesEl=document.getElementById("misses"),accuracyEl=document.getElementById("accuracy"),timerEl=document.getElementById("timer"),scoreEl=document.getElementById("score"),modal=document.getElementById("modal"),failModal=document.getElementById("failModal"),modeModal=document.getElementById("modeModal"),playerModal=document.getElementById("playerModal"),leaderboardModal=document.getElementById("leaderboardModal");
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function formatTime(sec){return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`}
+function elapsed(){return startTime?Math.floor((Date.now()-startTime)/1000):0}
+function updateStats(){
+  roundEl.textContent=round;matchesEl.textContent=matches;movesEl.textContent=moves;missesEl.textContent=misses;
+  accuracyEl.textContent=(attempts===0?100:Math.round(totalMatches/attempts*100))+"%"; if(scoreEl) scoreEl.textContent=score;
+}
+function startTimer(){if(started)return;started=true;startTime=Date.now();timerHandle=setInterval(()=>timerEl.textContent=formatTime(elapsed()),1000)}
+function prepareRounds(){
+  const shuffledPairs=shuffle([...pairs]);
+  roundPairs=[shuffledPairs.slice(0,6),shuffledPairs.slice(6,12)];
+}
+function buildDeck(){
+  deck=[];(roundPairs[round-1]||[]).forEach(p=>{deck.push({pair:p.id,side:"a",html:p.a});deck.push({pair:p.id,side:"b",html:p.b})});shuffle(deck);
+}
+function render(){
+  grid.innerHTML="";
+  deck.forEach((item,i)=>{
+    const card=document.createElement("button");
+    card.className="card";card.dataset.index=i;card.dataset.pairColor=pairColorIndex[item.pair];card.dataset.pairId=item.pair;
+    card.innerHTML=`<div class="card-inner"><div class="face front"><div class="mark">?</div></div><div class="face back"><span class="pairtag">Match Me</span>${item.html}</div></div>`;
+    if(gameMode==="practice"){
+      card.classList.add("flipped");
+      card.setAttribute("aria-label","Revealed tile");
+    }
+    card.addEventListener("click",()=>flip(card,item));
+    card.addEventListener("pointerenter",()=>{
+      if(!reviewMode || !card.classList.contains("matched")) return;
+      document.querySelectorAll(".review-pulse").forEach(c=>c.classList.remove("review-pulse"));
+      const mate=[...document.querySelectorAll(".card.matched")].find(c=>
+        c!==card && c.dataset.pairId===card.dataset.pairId
+      );
+      if(mate) mate.classList.add("review-pulse");
+    });
+    card.addEventListener("pointerleave",()=>{
+      document.querySelectorAll(".review-pulse").forEach(c=>c.classList.remove("review-pulse"));
+    });
+    grid.appendChild(card);
+  });
+}
+function flip(card,item){
+  if(lock||card.classList.contains("matched"))return;
+
+  if(gameMode==="practice"){
+    if(card.classList.contains("selected")) return;
+    card.classList.add("selected");
+    if(!first){
+      const selectedColor=getComputedStyle(document.documentElement).getPropertyValue(`--pair${pairColorIndex[item.pair]}`).trim();
+      card.querySelector(".back").style.background=selectedColor;
+      first={card,item};
+      msg.textContent="Now select the tile that matches it.";
+      return;
+    }
+    second={card,item};
+    if(first.item.pair===second.item.pair && first.item.side!==second.item.side){
+      first.card.querySelector(".back").style.background="";
+      second.card.querySelector(".back").style.background="";
+      first.card.classList.remove("selected");second.card.classList.remove("selected");
+      first.card.classList.add("matched");second.card.classList.add("matched");
+      first.card.disabled=true;second.card.disabled=true;matches++;
+      msg.textContent="Match! Keep going.";
+      first=second=null;
+      if(matches===6){
+        if(round===1){setTimeout(()=>nextRound(),500);}
+        else finishPractice();
+      }
+    }else{
+      lock=true;
+      msg.textContent="Those tiles do not match. Try again.";
+      setTimeout(()=>{
+        first.card.querySelector(".back").style.background="";
+        second.card.querySelector(".back").style.background="";
+        first.card.classList.remove("selected");second.card.classList.remove("selected");
+        first=second=null;lock=false;
+        msg.textContent="Choose two revealed tiles that belong together.";
+      },650);
+    }
+    return;
+  }
+
+  if(card.classList.contains("flipped"))return;
+  startTimer();card.classList.add("flipped");
+  if(!first){first={card,item};msg.textContent="Now find the tile that belongs with it.";return}
+  second={card,item};moves++;attempts++;
+  if(first.item.pair===second.item.pair&&first.item.side!==second.item.side){
+    first.card.classList.add("matched");second.card.classList.add("matched");
+    first.card.disabled=true;second.card.disabled=true;matches++;totalMatches++;score+=10;
+    if(misses>0) misses--;
+    updateStats();
+    msg.textContent="Match! Keep going.";first=second=null;if(matches===6){
+      if(round===1){setTimeout(()=>nextRound(),500);}
+      else finish();
+    }
+  }else{
+    misses++;totalWrong++;score-=3;updateStats();lock=true;
+    const hit=misses>=FAIL_LIMIT;
+    msg.textContent=hit?"Miss limit reached.":`Not a match. ${FAIL_LIMIT-misses} misses remaining.`;
+    setTimeout(()=>{
+      first.card.classList.remove("flipped");second.card.classList.remove("flipped");first=second=null;
+      if(hit){clearInterval(timerHandle);failModal.classList.add("show")}
+      else{lock=false;msg.textContent="Choose two tiles that belong together."}
+    },950);
+  }
+}
+function nextRound(){
+  round=2;matches=0;first=second=null;lock=false;reviewMode=false;
+  buildDeck();render();updateStats();
+  msg.textContent=gameMode==="practice"?"Round 2: Choose two revealed tiles that belong together.":"Round 2: Choose two tiles that belong together.";
+}
+function finishPractice(){
+  reviewMode=true;
+  document.querySelectorAll(".card.matched").forEach(c=>{
+    c.disabled=false;
+    c.removeAttribute("disabled");
+    c.style.pointerEvents="auto";
+    c.setAttribute("aria-label","Completed match — hover to find its partner");
+  });
+  msg.textContent="Practice complete! Hover over any tile and its matching tile will pulse.";
+  setTimeout(()=>{
+    alert("Practice complete! Hover over any tile to see its match pulse.");
+  },250);
+}
+function finish(){
+  clearInterval(timerHandle);const sec=elapsed();timerEl.textContent=formatTime(sec);
+  document.getElementById("finalTime").textContent=formatTime(sec);
+  document.getElementById("finalMoves").textContent=moves;
+  document.getElementById("finalAccuracy").textContent=(attempts===0?100:Math.round(totalMatches/attempts*100))+"%";
+  msg.textContent="Both rounds complete — all 12 pairs matched!";submitScore("COMPLETE");setTimeout(()=>modal.classList.add("show"),500);
+}
+function newGame(){
+  clearInterval(timerHandle);first=second=null;lock=false;moves=0;matches=0;totalMatches=0;attempts=0;totalWrong=0;misses=0;startTime=null;started=false;reviewMode=false;score=0;round=1;prepareRounds();
+  timerEl.textContent="0:00";modal.classList.remove("show");failModal.classList.remove("show");
+  document.body.classList.toggle("practice-mode",gameMode==="practice");
+  msg.textContent=gameMode==="practice"?"Choose two revealed tiles that belong together.":"Choose two tiles that belong together.";
+  updateStats();buildDeck();render();
+}
+function chooseMode(mode){
+  gameMode=mode;
+  modeModal.classList.remove("show");
+  newGame();
+}
+function showModeChooser(){
+  clearInterval(timerHandle);
+  modeModal.classList.add("show");
+}
+document.getElementById("newGameBtn").addEventListener("click",showModeChooser);
+document.getElementById("practiceMode").addEventListener("click",()=>chooseMode("practice"));
+document.getElementById("challengeMode").addEventListener("click",()=>{
+  modeModal.classList.remove("show"); playerModal.classList.add("show");
+});
+document.getElementById("startChallenge").addEventListener("click",()=>{
+  const n=document.getElementById("studentName").value.trim();
+  const p=document.getElementById("studentPeriod").value;
+  if(!n || !["0","3","4","7"].includes(p)){document.getElementById("playerError").textContent="Enter your name and select your period.";return;}
+  playerName=n;playerPeriod=p;document.getElementById("playerError").textContent="";
+  playerModal.classList.remove("show");chooseMode("challenge");
+});
+document.getElementById("reviewGame").addEventListener("click",()=>{
+  modal.classList.remove("show");reviewMode=true;
+  document.querySelectorAll(".card.matched").forEach(c=>{
+    c.disabled=false;
+    c.removeAttribute("disabled");
+    c.style.pointerEvents="auto";
+  });
+  msg.textContent="Review your completed matches. Hover over a tile and its match will pulse.";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+document.getElementById("playAgain").addEventListener("click",newGame);
+document.getElementById("resetAfterFail").addEventListener("click",newGame);
+document.getElementById("quitAfterFail").addEventListener("click",()=>{
+  failModal.classList.remove("show");lock=true;msg.textContent="Game ended. Select New Game when you are ready to try again.";
+});
+document.getElementById("referenceBtn").addEventListener("click",()=>{
+  const r=document.getElementById("reference");r.classList.toggle("open");
+  document.getElementById("referenceBtn").textContent=r.classList.contains("open")?"Hide Reference":"Reference Sheet";
+});
+
+function submitScore(status){
+  if(gameMode!=="challenge" || !playerName || !playerPeriod) return;
+  let frame=document.getElementById("scoreSubmitFrame");
+  if(!frame){
+    frame=document.createElement("iframe");
+    frame.id="scoreSubmitFrame"; frame.name="scoreSubmitFrame";
+    frame.style.display="none"; document.body.appendChild(frame);
+  }
+  const form=document.createElement("form");
+  form.method="POST"; form.action=LEADERBOARD_URL; form.target="scoreSubmitFrame"; form.style.display="none";
+  const data={
+    name:playerName,period:playerPeriod,correct:String(totalMatches),misses:String(misses),
+    score:String(score),totalWrong:String(totalWrong),timeSeconds:String(elapsed()),status:status
+  };
+  Object.entries(data).forEach(([k,v])=>{
+    const input=document.createElement("input"); input.type="hidden"; input.name=k; input.value=v; form.appendChild(input);
+  });
+  document.body.appendChild(form); form.submit(); setTimeout(()=>form.remove(),1500);
+}
+function loadLeaderboard(period="all"){
+  const body=document.getElementById("leaderboardBody");
+  body.textContent="Loading…";
+  const callback="lbCallback_"+Date.now()+"_"+Math.floor(Math.random()*100000);
+  const script=document.createElement("script");
+  let finished=false;
+  const cleanup=()=>{if(script.parentNode)script.remove();try{delete window[callback]}catch(e){window[callback]=undefined}};
+  const timer=setTimeout(()=>{
+    if(finished)return;finished=true;cleanup();
+    body.innerHTML="<strong>Leaderboard could not be loaded.</strong><br><span style='font-size:.9rem'>Make sure you are signed into your Hoover City Schools Google account.</span>";
+  },8000);
+  window[callback]=(d)=>{
+    if(finished)return;finished=true;clearTimeout(timer);cleanup();
+    if(!d || !d.ok){
+      body.innerHTML=`<strong>Leaderboard error.</strong><br>${escapeHtml((d&&d.error)||"Unknown error")}`;
+      return;
+    }
+    const rows=d.leaderboard||[];
+    body.innerHTML=rows.length?`<div style="overflow:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th>Rank</th><th>Name</th><th>Period</th><th>Score</th><th>Misses</th><th>Time</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${x.rank}</td><td>${escapeHtml(x.name)}</td><td>${x.period}</td><td>${x.score}</td><td>${x.misses}</td><td>${x.time}</td></tr>`).join("")}</tbody></table></div>`:"No completed scores yet.";
+  };
+  script.onerror=()=>{
+    if(finished)return;finished=true;clearTimeout(timer);cleanup();
+    body.innerHTML="<strong>Leaderboard could not be loaded.</strong><br><span style='font-size:.9rem'>Google blocked the leaderboard request. Make sure you are signed into your Hoover City Schools Google account.</span>";
+  };
+  script.src=`${LEADERBOARD_URL}?period=${encodeURIComponent(period)}&callback=${encodeURIComponent(callback)}&_=${Date.now()}`;
+  document.body.appendChild(script);
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+document.getElementById("leaderboardBtn").addEventListener("click",()=>{leaderboardModal.classList.add("show");loadLeaderboard("all");});
+document.querySelectorAll(".lbFilter").forEach(b=>b.addEventListener("click",()=>loadLeaderboard(b.dataset.period)));
+document.getElementById("closeLeaderboard").addEventListener("click",()=>leaderboardModal.classList.remove("show"));
+
+</script>
+
+</div>
+
+</body>
+</html>
