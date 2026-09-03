@@ -91,7 +91,9 @@ body:before{
     <div class="header-actions">
       <button class="iconbtn refbtn" id="referenceBtn"><span class="ico">📖</span><span class="btnlabel">REFERENCE<br>SHEET</span></button>
       <button class="iconbtn newbtn" id="newGameBtn"><span class="ico">🏆</span><span class="btnlabel">NEW GAME</span></button>
-      <button class="iconbtn soundbtn" id="soundBtn" type="button"><span class="ico">🔊</span><span class="btnlabel">SOUND</span></button><button id="leaderboardBtn" style="display:none">Leaderboard</button>
+      <button class="iconbtn leaderboardTopBtn" id="leaderboardTopBtn" type="button"><span class="ico">🏅</span><span class="btnlabel">LEADERBOARD</span></button>
+      <button class="iconbtn soundbtn" id="soundBtn" type="button"><span class="ico">🔊</span><span class="btnlabel">SOUND</span></button>
+      <button id="leaderboardBtn" style="display:none">Leaderboard</button>
     </div>
   </header>
 
@@ -591,6 +593,120 @@ document.addEventListener("DOMContentLoaded",function(){
   .iconbtn .ico{top:14px!important;font-size:28px!important}
   .btnlabel{font-size:8px!important}
   .refbtn .btnlabel{font-size:7px!important}
+}
+</style>
+
+
+<style id="leaderboard-visible-control">
+.iconbtn.leaderboardTopBtn{border-color:#d653ff!important;filter:drop-shadow(0 0 4px rgba(214,83,255,.58))!important}
+.iconbtn.leaderboardTopBtn:after{border-color:#d653ff!important}
+.iconbtn.leaderboardTopBtn:hover{filter:brightness(1.25) drop-shadow(0 0 11px #d653ff)!important}
+.leaderboardTopBtn .btnlabel{font-size:8px!important}
+@media(max-width:1250px){
+ .header-actions{gap:7px!important}
+ .iconbtn{width:78px!important;height:82px!important;padding:52px 4px 4px!important}
+ .iconbtn .ico{font-size:27px!important;top:13px!important}
+ .btnlabel{font-size:7px!important}.leaderboardTopBtn .btnlabel{font-size:6px!important}
+}
+</style>
+<script id="leaderboard-visible-control-js">
+document.addEventListener("DOMContentLoaded",function(){
+ const topButton=document.getElementById("leaderboardTopBtn");
+ const existingButton=document.getElementById("leaderboardBtn");
+ if(topButton&&existingButton) topButton.addEventListener("click",()=>existingButton.click());
+});
+</script>
+
+
+<style id="header-title-menu-final-position">
+/* Desktop header: logo | title | controls */
+.header{
+  display:grid!important;
+  grid-template-columns:300px minmax(430px,1fr) 455px!important;
+  column-gap:22px!important;
+  align-items:center!important;
+  min-height:128px!important;
+}
+.logo{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  justify-self:start!important;
+}
+.heading{
+  justify-self:center!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.heading h1{
+  white-space:nowrap!important;
+  font-size:clamp(42px,4.2vw,62px)!important;
+}
+.heading p{
+  white-space:nowrap!important;
+  overflow:visible!important;
+}
+.header-actions{
+  position:relative!important;
+  right:auto!important;
+  top:auto!important;
+  justify-self:end!important;
+  display:flex!important;
+  gap:8px!important;
+  width:455px!important;
+  justify-content:flex-end!important;
+}
+.header-actions .iconbtn{
+  flex:0 0 104px!important;
+  width:104px!important;
+  height:102px!important;
+  padding:65px 5px 7px!important;
+}
+.header-actions .iconbtn .ico{
+  top:19px!important;
+  font-size:33px!important;
+}
+.header-actions .btnlabel{
+  font-size:8px!important;
+  line-height:1.08!important;
+}
+.header-actions .refbtn .btnlabel{font-size:8px!important}
+.header-actions .leaderboardTopBtn .btnlabel{font-size:7px!important}
+
+/* Prevent previous responsive rules from squeezing the controls into the title */
+@media (min-width:1181px) and (max-width:1420px){
+  .header{
+    grid-template-columns:245px minmax(390px,1fr) 395px!important;
+    column-gap:14px!important;
+  }
+  .logo{font-size:34px!important}
+  .heading h1{font-size:46px!important}
+  .heading p{font-size:12px!important}
+  .header-actions{width:395px!important;gap:5px!important}
+  .header-actions .iconbtn{
+    flex-basis:94px!important;width:94px!important;height:94px!important;
+    padding-top:60px!important;
+  }
+  .header-actions .iconbtn .ico{top:17px!important;font-size:30px!important}
+}
+
+/* Stack cleanly on narrower Chromebook/browser windows */
+@media(max-width:1180px){
+  .header{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    row-gap:12px!important;
+    padding-bottom:10px!important;
+  }
+  .logo,.heading,.header-actions{
+    justify-self:center!important;
+  }
+  .header-actions{
+    width:auto!important;
+    justify-content:center!important;
+  }
+  .heading h1{white-space:normal!important}
+  .heading p{white-space:normal!important}
 }
 </style>
 
