@@ -93,7 +93,11 @@ body:before{
       <button class="iconbtn newbtn" id="newGameBtn"><span class="ico">🏆</span><span class="btnlabel">NEW GAME</span></button>
       <button class="iconbtn leaderboardTopBtn" id="leaderboardTopBtn" type="button"><span class="ico">🏅</span><span class="btnlabel">LEADERBOARD</span></button>
       <button class="iconbtn soundbtn" id="soundBtn" type="button"><span class="ico">🔊</span><span class="btnlabel">SOUND</span></button>
-      <button id="leaderboardBtn" style="display:none">Leaderboard</button>
+      
+<button class="iconbtn exitGameBtn" id="exitGameBtn" type="button" title="Return to MATH XP home">
+  <span class="ico">⌂</span><span class="btnlabel">EXIT<br>GAME</span>
+</button>
+<button id="leaderboardBtn" style="display:none">Leaderboard</button>
     </div>
   </header>
 
@@ -179,7 +183,7 @@ const pairs=[
 ];
 const pairColorIndex={};pairs.forEach((p,i)=>pairColorIndex[p.id]=i);
 const FAIL_LIMIT=16;
-const LEADERBOARD_URL="https://script.google.com/a/macros/hoover.k12.al.us/s/AKfycbzyOqS3px87RgkzK5QZKY0YBsVdSEfefImamARZFgIVpeqzChT9Rjp2zTSM7BO1kTgl/exec";
+const LEADERBOARD_URL="https://script.google.com/a/macros/hoover.k12.al.us/s/AKfycbzB4EmZoBp3WtNwH3yroFWe24wUaFPT9xtTFw_vld9sro6XMqkDrZ1yTXwvHjiNAdDX/exec";
 let deck=[],first=null,second=null,lock=false,moves=0,matches=0,totalMatches=0,attempts=0,totalWrong=0,misses=0,startTime=null,timerHandle=null,started=false,reviewMode=false,gameMode=null,playerName='',playerPeriod='',score=0,round=1,roundPairs=[];
 const roundEl=document.getElementById("roundNum"),grid=document.getElementById("grid"),msg=document.getElementById("message"),matchesEl=document.getElementById("matches"),movesEl=document.getElementById("moves"),missesEl=document.getElementById("misses"),accuracyEl=document.getElementById("accuracy"),timerEl=document.getElementById("timer"),scoreEl=document.getElementById("score"),modal=document.getElementById("modal"),failModal=document.getElementById("failModal"),modeModal=document.getElementById("modeModal"),playerModal=document.getElementById("playerModal"),leaderboardModal=document.getElementById("leaderboardModal");
 
@@ -707,6 +711,101 @@ document.addEventListener("DOMContentLoaded",function(){
   }
   .heading h1{white-space:normal!important}
   .heading p{white-space:normal!important}
+}
+</style>
+
+
+<script id="math-xp-navigation">
+document.addEventListener("DOMContentLoaded", function(){
+  const exitGameBtn = document.getElementById("exitGameBtn");
+if(exitGameBtn){
+    exitGameBtn.addEventListener("click", function(){
+      window.location.href = "https://jbcreger.github.io/math-xp/";
+    });
+  }
+);
+  }
+});
+</script>
+
+
+<style id="math-xp-navigation-layout">
+/* Six-button desktop header: four game controls + two exit controls */
+@media(min-width:1421px){
+  .header{
+    grid-template-columns:260px minmax(390px,1fr) 620px!important;
+    column-gap:18px!important;
+  }
+  .header-actions{
+    width:620px!important;
+    gap:6px!important;
+  }
+  .header-actions .iconbtn{
+    flex:0 0 98px!important;
+    width:98px!important;
+    height:98px!important;
+    padding:62px 4px 7px!important;
+  }
+  .header-actions .iconbtn .ico{
+    top:18px!important;
+    font-size:31px!important;
+  }
+  .header-actions .btnlabel{
+    font-size:7.5px!important;
+  }
+}
+@media(min-width:1181px) and (max-width:1420px){
+  .header{
+    grid-template-columns:220px minmax(330px,1fr) 530px!important;
+    column-gap:10px!important;
+  }
+  .header-actions{
+    width:530px!important;
+    gap:4px!important;
+  }
+  .header-actions .iconbtn{
+    flex:0 0 85px!important;
+    width:85px!important;
+    height:88px!important;
+    padding:56px 3px 6px!important;
+  }
+  .header-actions .iconbtn .ico{
+    top:16px!important;
+    font-size:28px!important;
+  }
+  .heading h1{font-size:42px!important}
+  .heading p{font-size:11px!important}
+}
+.exitGameBtn{
+  border-color:#35e7ff!important;
+  filter:drop-shadow(0 0 8px rgba(53,231,255,.55));
+}
+.exitMathXPBtn{
+  border-color:#ffcc33!important;
+  filter:drop-shadow(0 0 8px rgba(255,204,51,.55));
+}
+.exitGameBtn:hover,.exitMathXPBtn:hover{
+  transform:translateY(-3px) scale(1.04)!important;
+  filter:drop-shadow(0 0 16px currentColor)!important;
+}
+</style>
+
+
+<style id="game-page-five-button-header">
+/* Game page has only EXIT GAME. EXIT MATH XP belongs on the MATH XP home page. */
+@media(min-width:1421px){
+  .header{grid-template-columns:280px minmax(410px,1fr) 525px!important}
+  .header-actions{width:525px!important;gap:7px!important}
+  .header-actions .iconbtn{
+    flex:0 0 98px!important;width:98px!important;height:98px!important;
+  }
+}
+@media(min-width:1181px) and (max-width:1420px){
+  .header{grid-template-columns:225px minmax(350px,1fr) 460px!important}
+  .header-actions{width:460px!important;gap:5px!important}
+  .header-actions .iconbtn{
+    flex:0 0 88px!important;width:88px!important;height:90px!important;
+  }
 }
 </style>
 
