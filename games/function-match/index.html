@@ -1,57 +1,108 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Introduction to Functions — Tile Match</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MATH XP — Function Match</title>
 <style>
-:root{--bg:#101216;--panel:#171a20;--text:#f4f5f7;--muted:#b9c0cc;--line:#f4f5f7;--light:#f7f7f7;--shadow:0 10px 30px rgba(0,0,0,.28);--pair0:#ffb3ba;--pair1:#bae1ff;--pair2:#baffc9;--pair3:#ffffba;--pair4:#d7baff;--pair5:#ffdfba;--pair6:#baf4e8;--pair7:#ffbadd;--pair8:#c9c9ff;--pair9:#dff5a8;--pair10:#ffc9de;--pair11:#b9e3f0}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 12% 8%,rgba(255,255,255,.06),transparent 28%),radial-gradient(circle at 88% 90%,rgba(255,255,255,.04),transparent 30%),var(--bg);color:var(--text)}
-.app{max-width:1220px;margin:auto;padding:22px}.topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}.titlewrap h1{margin:0;font-size:clamp(26px,4vw,46px);letter-spacing:.5px}.titlewrap p{margin:5px 0 0;color:var(--muted);font-size:15px}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}button{border:1px solid var(--line);background:transparent;color:var(--text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}button:hover{background:#fff;color:#111}
-.stats{display:grid;grid-template-columns:repeat(7,minmax(90px,1fr));gap:10px;margin-bottom:15px}.stat{background:var(--panel);border:1px solid #333943;border-radius:12px;padding:11px 13px;box-shadow:var(--shadow)}.stat .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}.stat .value{font-size:22px;font-weight:800;margin-top:2px}.message{background:var(--panel);border:1px solid #333943;border-radius:12px;padding:11px 14px;margin-bottom:14px;color:#e9ecf1;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:11px}.card{position:relative;min-height:136px;perspective:900px;cursor:pointer;user-select:none;padding:0}.card-inner{position:absolute;inset:0;transition:transform .42s ease;transform-style:preserve-3d}.card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px solid #3a404a;box-shadow:var(--shadow);overflow:hidden}.front{background:linear-gradient(145deg,#20242c,#15181e)}.front .mark{width:54px;height:54px;border:2px solid #fff;border-radius:14px;display:grid;place-items:center;font-size:30px;font-weight:900}.back{transform:rotateY(180deg);background:#f7f7f7;color:#111;padding:12px}.card.matched .back{outline:4px solid #111;outline-offset:-5px}
-  .card.matched[data-pair-color="0"] .back{background:var(--pair0)}
-  .card.matched[data-pair-color="1"] .back{background:var(--pair1)}
-  .card.matched[data-pair-color="2"] .back{background:var(--pair2)}
-  .card.matched[data-pair-color="3"] .back{background:var(--pair3)}
-  .card.matched[data-pair-color="4"] .back{background:var(--pair4)}
-  .card.matched[data-pair-color="5"] .back{background:var(--pair5)}
-  .card.matched[data-pair-color="6"] .back{background:var(--pair6)}
-  .card.matched[data-pair-color="7"] .back{background:var(--pair7)}
-  .card.matched[data-pair-color="8"] .back{background:var(--pair8)}
-  .card.matched[data-pair-color="9"] .back{background:var(--pair9)}
-  .card.matched[data-pair-color="10"] .back{background:var(--pair10)}
-  .card.matched[data-pair-color="11"] .back{background:var(--pair11)}.term{font-size:17px;font-weight:900;line-height:1.12}.sub{font-size:12px;margin-top:7px;line-height:1.25}.math{font-family:"Courier New",monospace;font-weight:800}.pairtag{position:absolute;top:7px;right:8px;font-size:9px;letter-spacing:.8px;color:#5e646d;text-transform:uppercase}.mini-table{margin:auto;border-collapse:collapse;font-size:12px}.mini-table th,.mini-table td{border:1px solid #111;padding:3px 8px}.mapping,.graph{width:100%;height:92px;display:block;margin:auto}
-.reference{display:none;background:#f7f7f7;color:#111;border-radius:16px;padding:18px;border:2px solid #111;margin-bottom:14px}.reference.open{display:block}.reference h2{margin:0 0 10px;font-size:23px}.refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.refbox{border:1px solid #111;border-radius:10px;padding:10px}.refbox b{display:block;margin-bottom:4px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.modalbox{max-width:560px;width:100%;background:#f7f7f7;color:#111;border-radius:18px;padding:24px;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.55)}.modalbox h2{font-size:34px;margin:0 0 8px}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.result{border:1px solid #111;border-radius:10px;padding:10px}.result strong{display:block;font-size:25px}.modalbox button{border-color:#111;color:#111}.modalbox button:hover{background:#111;color:#fff}
-@media(max-width:980px){.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:720px){.grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.refgrid{grid-template-columns:1fr}.card{min-height:126px}}@media(max-width:480px){.app{padding:12px}.grid{grid-template-columns:repeat(2,1fr);gap:8px}.card{min-height:120px}.term{font-size:15px}}
+:root{
+  --cyan:#19ddff; --cyan2:#0d78ff; --gold:#ffc21a; --green:#56ff36;
+  --red:#ff3e49; --purple:#d653ff; --bg:#02040a; --panel:#050b14;
+  --pair0:#ffb3ba;--pair1:#bae1ff;--pair2:#baffc9;--pair3:#ffffba;
+  --pair4:#d7baff;--pair5:#ffdfba;--pair6:#baf4e8;--pair7:#ffbadd;
+  --pair8:#c9c9ff;--pair9:#dff5a8;--pair10:#ffc9de;--pair11:#b9e3f0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:#fff;background:#02040a}
+body{
+ background:
+   radial-gradient(circle at 50% 64%,rgba(139,34,255,.55),transparent 17%),
+   radial-gradient(circle at 13% 52%,rgba(16,77,210,.28),transparent 27%),
+   radial-gradient(circle at 87% 52%,rgba(151,25,202,.25),transparent 27%),
+   linear-gradient(#010309 0,#050817 56%,#02040a 100%);
+ overflow-x:hidden;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+ background:
+   radial-gradient(circle at 50% 66%,rgba(220,61,255,.18),transparent 15%),
+   repeating-linear-gradient(0deg,transparent 0 31px,rgba(63,69,255,.10) 32px),
+   repeating-linear-gradient(90deg,transparent 0 50px,rgba(63,69,255,.075) 51px);
+ mask-image:linear-gradient(to bottom,transparent 46%,#000 78%);
+}
+.shell{position:relative;z-index:1;max-width:1500px;margin:auto;padding:14px 20px 28px}
+.header{position:relative;min-height:108px;display:flex;align-items:center;justify-content:center}
+.logo{position:absolute;left:0;top:5px;font-weight:1000;font-style:italic;line-height:.9;letter-spacing:-.06em;font-size:45px}
+.logo .math{color:#1bdbff;text-shadow:0 0 10px #0ac3ff,0 0 22px #0ac3ff}
+.logo .xp{color:#d64cff;text-shadow:0 0 10px #d64cff,0 0 22px #d64cff}
+.logo small{display:block;margin:7px 0 0 37px;font-size:10px;letter-spacing:.12em;color:#17e8ff}
+.heading{text-align:center}
+.heading h1{margin:0;font-size:clamp(40px,4.8vw,64px);font-style:italic;line-height:.95;letter-spacing:-.025em;text-shadow:0 4px 0 #33495e,0 0 14px #fff4}
+.heading p{margin:9px 0 0;font-size:15px}
+.header-actions{position:absolute;right:0;top:5px;display:flex;gap:12px}
+.iconbtn{width:75px;height:68px;border:1px solid var(--cyan);border-radius:15px;background:#030c14;color:#fff;font-weight:900;font-size:9px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 12px #18ddff44}
+.iconbtn .ico{display:block;font-size:25px;margin-bottom:3px}.iconbtn:hover{filter:brightness(1.25);box-shadow:0 0 20px #18ddffaa}
 
-@keyframes reviewMatePulse{
-  0%,100%{
-    transform:rotateY(180deg) scale(1);
-    box-shadow:0 0 0 3px #111, 0 10px 30px rgba(0,0,0,.28);
-  }
-  50%{
-    transform:rotateY(180deg) scale(1.07);
-    box-shadow:0 0 0 8px #111, 0 0 0 14px rgba(255,255,255,.95), 0 14px 38px rgba(0,0,0,.4);
-  }
-}
-.card.review-pulse .back{
-  animation:reviewMatePulse .65s ease-in-out infinite !important;
-  z-index:50;
-}
-.card.review-pulse{
-  z-index:50;
-}
+.stats{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.stat{min-height:82px;padding:9px 10px;background:linear-gradient(145deg,#07101c,#02060b);border:1px solid #10799c;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:0 0 8px #000}
+.stat .label{font-size:10px;font-weight:1000;letter-spacing:.06em;color:#18e8ff;text-transform:uppercase}
+.stat .value{font-size:25px;font-weight:1000;margin-top:6px}.stat:nth-child(3){border-color:#1a8f2d}.stat:nth-child(3) .label{color:#54ff36}.stat:nth-child(4){border-color:#9f1d28}.stat:nth-child(4) .label{color:#ff4651}.stat:nth-child(6){border-color:#78279d}.stat:nth-child(6) .label{color:#db4cff}.stat:nth-child(7){border-color:#9f7500}.stat:nth-child(7) .label{color:#ffd019}
 
+.mode-stage{position:relative;min-height:525px;padding-top:22px}
+.mode-title{width:min(620px,88%);margin:0 auto 20px;min-height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(#07131f,#02070c);border:2px solid #468dff;color:#68e9ff;font-size:23px;font-weight:1000;letter-spacing:.04em;text-transform:uppercase;clip-path:polygon(4% 0,96% 0,100% 50%,96% 100%,4% 100%,0 50%);box-shadow:0 0 13px #19ddff55}
+.mode-title span{color:#ffd11b;margin:0 24px}
+.mode-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+.mode-button{position:relative;height:390px;border:0;background:transparent;padding:0;cursor:pointer;color:#fff}
+.mode-button svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mode-button path{transition:.18s;stroke-width:4;vector-effect:non-scaling-stroke}
+.mode-button.practice path{fill:#04131e;stroke:var(--cyan);filter:drop-shadow(0 0 5px var(--cyan)) drop-shadow(0 0 11px #19ddff88)}
+.mode-button.challenge path{fill:#160f02;stroke:var(--gold);filter:drop-shadow(0 0 5px var(--gold)) drop-shadow(0 0 11px #ffc21a88)}
+.mode-button:hover{transform:translateY(-5px) scale(1.015)}
+.mode-button.practice:hover path{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px var(--cyan)) drop-shadow(0 0 28px var(--cyan))}
+.mode-button.challenge:hover path{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px var(--gold)) drop-shadow(0 0 28px var(--gold))}
+.mode-content{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:42px 95px}
+.practice .mode-content{padding-right:125px}.challenge .mode-content{padding-left:125px}
+.mode-icon{font-size:42px;margin-bottom:5px}.mode-name{font-size:34px;line-height:1.03;font-weight:1000}.practice .mode-name{color:var(--cyan)}.challenge .mode-name{color:var(--gold)}
+.mode-rule{width:72%;height:2px;margin:17px auto;background:currentColor;position:relative}.mode-rule:after{content:"";position:absolute;right:-3px;top:-2px;width:6px;height:6px;border-radius:50%;background:currentColor}
+.mode-copy{font-size:19px;line-height:1.5;font-weight:700}
+.game-area{display:none}.game-area.active{display:block}
+.message{margin:14px auto;width:min(700px,95%);min-height:47px;display:flex;align-items:center;justify-content:center;text-align:center;background:#060c16;border:1px solid #2b69a5;color:#63e8ff;font-weight:900;text-transform:uppercase;letter-spacing:.04em;clip-path:polygon(3% 0,97% 0,100% 50%,97% 100%,3% 100%,0 50%)}
+.message:before,.message:after{content:"⚡";color:#ffd21b;margin:0 16px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card{position:relative;min-height:136px;perspective:900px;cursor:pointer;user-select:none;padding:0;border:0;background:transparent}.card-inner{position:absolute;inset:0;transition:transform .42s ease;transform-style:preserve-3d}.card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}.front{background:linear-gradient(145deg,#17113d,#07102d);border:2px solid #ae43ff;box-shadow:0 0 14px #a83cff55}.card:nth-child(3n+1) .front{border-color:#13dcff;box-shadow:0 0 14px #13dcff55}.front .mark{width:55px;height:55px;border:1px solid #a861ff;border-radius:10px;display:grid;place-items:center;font-size:32px;font-weight:1000;color:#c5afff;background:#18143f;box-shadow:0 0 14px #a33cff55}.back{transform:rotateY(180deg);background:#f8fbff;color:#111;border:2px solid #13dcff;padding:12px;box-shadow:0 0 13px #13dcff44}.card.matched .back{outline:4px solid #111;outline-offset:-5px}
+.card.matched[data-pair-color="0"] .back{background:var(--pair0)}.card.matched[data-pair-color="1"] .back{background:var(--pair1)}.card.matched[data-pair-color="2"] .back{background:var(--pair2)}.card.matched[data-pair-color="3"] .back{background:var(--pair3)}.card.matched[data-pair-color="4"] .back{background:var(--pair4)}.card.matched[data-pair-color="5"] .back{background:var(--pair5)}.card.matched[data-pair-color="6"] .back{background:var(--pair6)}.card.matched[data-pair-color="7"] .back{background:var(--pair7)}.card.matched[data-pair-color="8"] .back{background:var(--pair8)}.card.matched[data-pair-color="9"] .back{background:var(--pair9)}.card.matched[data-pair-color="10"] .back{background:var(--pair10)}.card.matched[data-pair-color="11"] .back{background:var(--pair11)}
+.term{font-size:17px;font-weight:900;line-height:1.12}.sub{font-size:12px;margin-top:7px;line-height:1.25}.math{font-family:"Courier New",monospace;font-weight:800}.pairtag{position:absolute;top:7px;right:8px;font-size:9px;letter-spacing:.8px;color:#5e646d;text-transform:uppercase}.mini-table{margin:auto;border-collapse:collapse;font-size:12px}.mini-table th,.mini-table td{border:1px solid #111;padding:3px 8px}.mapping,.graph{width:100%;height:92px;display:block;margin:auto}
+.reference{display:none;margin:14px 0;background:#f7fbff;color:#111;border:2px solid #13dcff;border-radius:14px;padding:17px}.reference.open{display:block}.reference h2{margin-top:0}.refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.refbox{border:1px solid #111;border-radius:10px;padding:10px}.refbox b{display:block;margin-bottom:4px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;z-index:30}.modal.show{display:flex}.modalbox{max-width:620px;width:100%;background:linear-gradient(145deg,#101a31,#080f1d);color:#fff;border:1px solid #526fb7;border-radius:16px;padding:24px;text-align:center;box-shadow:0 24px 70px #000c,0 0 25px #6a3cff33}.modalbox h2{font-size:32px;margin:0 0 8px}.modalbox button{border:1px solid #13dcff;background:#071321;color:#fff;border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer}.modalbox button:hover{filter:brightness(1.3)}.modalbox input,.modalbox select{background:#050b14!important;color:#fff!important;border:1px solid #3676a8!important}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.result{border:1px solid #3676a8;border-radius:10px;padding:10px}.result strong{display:block;font-size:25px}
+#modeModal{position:absolute;inset:0;background:transparent;padding:0;z-index:10;display:none;align-items:flex-start;justify-content:center}
+#modeModal.show{display:flex}
+#modeModal .modalbox{max-width:none;width:100%;height:100%;background:transparent;border:0;box-shadow:none;padding:0}
+#modeModal .modalbox h2,#modeModal .modalbox p,#modeModal .modalbox .actions{display:none}
+@keyframes reviewMatePulse{0%,100%{transform:rotateY(180deg) scale(1);box-shadow:0 0 0 3px #111,0 10px 30px rgba(0,0,0,.28)}50%{transform:rotateY(180deg) scale(1.07);box-shadow:0 0 0 8px #111,0 0 0 14px rgba(255,255,255,.95),0 14px 38px rgba(0,0,0,.4)}}.card.review-pulse .back{animation:reviewMatePulse .65s ease-in-out infinite!important;z-index:50}.card.review-pulse{z-index:50}
+@media(max-width:960px){.logo{position:static;text-align:center;font-size:29px}.logo small{margin-left:0}.header{display:block;text-align:center}.header-actions{position:static;justify-content:center;margin-top:12px}.stats{grid-template-columns:repeat(4,1fr)}.mode-grid{grid-template-columns:1fr}.mode-button{height:300px}.practice .mode-content,.challenge .mode-content{padding:35px}.mode-button svg{display:none}.mode-button{background:#06111d;border:2px solid var(--cyan);border-radius:15px}.mode-button.challenge{border-color:var(--gold);background:#151003}.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,1fr)}.refgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="topbar">
-    <div class="titlewrap"><h1>Introduction to Functions</h1><p>Tile Match • Match each idea with the correct representation or description.</p></div>
-    <div class="controls"><button id="referenceBtn">Reference Sheet</button><button id="newGameBtn">New Game</button>
-<button id="leaderboardBtn">Leaderboard</button></div>
+<div class="shell">
+  <header class="header">
+    <div class="logo"><span class="math">MATH</span> <span class="xp">XP</span><small>LEVEL UP YOUR MIND</small></div>
+    <div class="heading"><h1>FUNCTION MATCH</h1><p>Match each idea with the correct representation or description.</p></div>
+    <div class="header-actions">
+      <button class="iconbtn refbtn" id="referenceBtn"><span class="ico">📖</span><span class="btnlabel">REFERENCE<br>SHEET</span></button>
+      <button class="iconbtn newbtn" id="newGameBtn"><span class="ico">🏆</span><span class="btnlabel">NEW GAME</span></button>
+      <button class="iconbtn soundbtn" id="soundBtn" type="button"><span class="ico">🔊</span><span class="btnlabel">SOUND</span></button><button id="leaderboardBtn" style="display:none">Leaderboard</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Round</div><div class="value"><span id="roundNum">1</span> / 2</div></div>
+    <div class="stat"><div class="label">Matches</div><div class="value"><span id="matches">0</span> / 6</div></div>
+    <div class="stat"><div class="label">Moves</div><div class="value" id="moves">0</div></div>
+    <div class="stat"><div class="label">Misses</div><div class="value"><span id="misses">0</span> / 16</div></div>
+    <div class="stat"><div class="label">Accuracy</div><div class="value" id="accuracy">100%</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="timer">0:00</div></div>
+    <div class="stat"><div class="label">Best Score</div><div class="value" id="score">0</div></div>
   </div>
 
   <section id="reference" class="reference"><h2>Quick Reference</h2><div class="refgrid">
@@ -63,79 +114,53 @@
     <div class="refbox"><b>Variables</b>Independent = input = x. Dependent = output = y.</div>
   </div></section>
 
-  <div class="stats">
-    <div class="stat"><div class="label">Round</div><div class="value"><span id="roundNum">1</span>/2</div></div>
-    <div class="stat"><div class="label">Matches</div><div class="value"><span id="matches">0</span>/6</div></div>
-    <div class="stat"><div class="label">Moves</div><div class="value" id="moves">0</div></div>
-    <div class="stat"><div class="label">Misses</div><div class="value"><span id="misses">0</span>/16</div></div>
-    <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div></div>
-    <div class="stat"><div class="label">Accuracy</div><div class="value" id="accuracy">100%</div></div>
-    <div class="stat"><div class="label">Time</div><div class="value" id="timer">0:00</div></div>
-  </div>
-  <div class="message" id="message">Choose two tiles that belong together.</div>
-  <main class="grid" id="grid"></main>
-</div>
-
-<div class="modal" id="modal"><div class="modalbox"><h2>Board Cleared!</h2><p>You completed both rounds and matched all 12 function concepts.</p><div class="results"><div class="result"><span>Time</span><strong id="finalTime">0:00</strong></div><div class="result"><span>Moves</span><strong id="finalMoves">0</strong></div><div class="result"><span>Accuracy</span><strong id="finalAccuracy">100%</strong></div></div><button id="reviewGame">Review Completed Game</button>
-    <button id="playAgain">Play Again</button></div></div>
-
-
-
-<div class="modal" id="playerModal">
-  <div class="modalbox">
-    <h2>Challenge Player</h2>
-    <p>Enter your information before starting a scored Challenge game. Matches earn 10 points and remove one miss; misses cost 3 points.</p>
-    <div style="max-width:360px;margin:16px auto;text-align:left">
-      <label style="display:block;font-weight:800;margin-bottom:6px">Name</label>
-      <input id="studentName" maxlength="40" autocomplete="name" style="width:100%;padding:12px;border:2px solid #111;border-radius:10px;font-size:1rem;margin-bottom:14px">
-      <label style="display:block;font-weight:800;margin-bottom:6px">Period</label>
-      <select id="studentPeriod" style="width:100%;padding:12px;border:2px solid #111;border-radius:10px;font-size:1rem">
-        <option value="">Select period</option><option value="0">Period 0</option><option value="3">Period 3</option><option value="4">Period 4</option><option value="7">Period 7</option>
-      </select>
-      <div id="playerError" style="margin-top:10px;font-weight:800"></div>
+  <section class="mode-stage" id="modeStage">
+    <div class="mode-title"><span>⚡</span>CHOOSE YOUR MODE<span>⚡</span></div>
+    <div class="mode-grid">
+      <button class="mode-button practice" id="practiceMode">
+        <svg viewBox="0 0 600 390" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M8 38 H405 V8 L592 195 L405 382 V352 H8 Z"/>
+        </svg>
+        <div class="mode-content">
+          <div class="mode-icon">🛡️</div>
+          <div class="mode-name">PRACTICE<br>MODE</div>
+          <div class="mode-rule"></div>
+          <div class="mode-copy">All tiles are visible.<br>Timer, score, and misses are tracked.<br>Practice results are not submitted.</div>
+        </div>
+      </button>
+      <button class="mode-button challenge" id="challengeMode">
+        <svg viewBox="0 0 600 390" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M592 38 H195 V8 L8 195 L195 382 V352 H592 Z"/>
+        </svg>
+        <div class="mode-content">
+          <div class="mode-icon">🏆</div>
+          <div class="mode-name">CHALLENGE<br>MODE</div>
+          <div class="mode-rule"></div>
+          <div class="mode-copy">Tiles are hidden.<br>Score, timer, and<br>the 16-miss <b style="color:#ff6b31">FAIL</b><br>limit are <b style="color:#ffc21a">ON!</b></div>
+        </div>
+      </button>
     </div>
-    <button id="startChallenge">Start Challenge</button>
-  </div>
-</div>
-<div class="modal" id="leaderboardModal">
-  <div class="modalbox" style="max-width:760px">
-    <h2>Leaderboard</h2>
-    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px">
-      <button class="lbFilter" data-period="all">Overall</button>
-      <button class="lbFilter" data-period="0">Period 0</button>
-      <button class="lbFilter" data-period="3">Period 3</button>
-      <button class="lbFilter" data-period="4">Period 4</button>
-      <button class="lbFilter" data-period="7">Period 7</button>
-    </div>
-    <div id="leaderboardBody">Loading…</div>
-    <button id="closeLeaderboard" style="margin-top:14px">Close</button>
+  </section>
+
+  <div class="game-area" id="gameArea">
+    <div class="message" id="message">Choose two tiles that belong together.</div>
+    <main class="grid" id="grid"></main>
   </div>
 </div>
 
-<div class="modal show" id="modeModal">
-  <div class="modalbox">
-    <h2>Choose Your Mode</h2>
-    <p><strong>Practice</strong> keeps every tile revealed. Match the pairs with no score, timer, miss limit, or penalty.</p>
-    <p><strong>Challenge</strong> uses hidden tiles, scoring, and the 16-miss FAIL limit.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px">
-      <button id="practiceMode">Practice</button>
-      <button id="challengeMode">Challenge</button>
-    </div>
-  </div>
-</div>
+<!-- Compatibility mode modal used only by existing game JS -->
+<div class="modal show" id="modeModal"><div class="modalbox"><h2>Choose Your Mode</h2><p></p><div class="actions"></div></div></div>
 
-<div class="modal" id="failModal">
-  <div class="modalbox">
-    <h2>FAIL</h2>
-    <p>You reached the limit of <strong>16 incorrect matches</strong>.</p>
-    <p>Use the reference sheet, then reset for a new shuffled board.</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
-      <button id="resetAfterFail">Reset &amp; Try Again</button>
-      <button id="quitAfterFail">Quit Game</button>
-    </div>
-  </div>
+<div class="modal" id="modal"><div class="modalbox"><h2>Board Cleared!</h2><p>You completed both rounds and matched all 12 function concepts.</p><div class="results"><div class="result"><span>Time</span><strong id="finalTime">0:00</strong></div><div class="result"><span>Moves</span><strong id="finalMoves">0</strong></div><div class="result"><span>Accuracy</span><strong id="finalAccuracy">100%</strong></div></div><button id="reviewGame">Review Completed Game</button> <button id="playAgain">Play Again</button></div></div>
+
+<div class="modal" id="playerModal"><div class="modalbox"><h2>Challenge Player</h2><p>Enter your information before starting a scored Challenge game.</p><div style="max-width:360px;margin:16px auto;text-align:left"><label style="display:block;font-weight:800;margin-bottom:6px">Name</label><input id="studentName" maxlength="40" style="width:100%;padding:12px;border-radius:10px;font-size:1rem;margin-bottom:14px"><label style="display:block;font-weight:800;margin-bottom:6px">Period</label><select id="studentPeriod" style="width:100%;padding:12px;border-radius:10px;font-size:1rem"><option value="">Select period</option><option value="0">Period 0</option><option value="3">Period 3</option><option value="4">Period 4</option><option value="7">Period 7</option></select><div id="playerError" style="margin-top:10px;font-weight:800"></div></div><button id="startChallenge">Start Challenge</button></div></div>
+
+<div class="modal" id="leaderboardModal"><div class="modalbox"><h2>Leaderboard</h2><div><button class="lbFilter" data-period="all">Overall</button><button class="lbFilter" data-period="0">Period 0</button><button class="lbFilter" data-period="3">Period 3</button><button class="lbFilter" data-period="4">Period 4</button><button class="lbFilter" data-period="7">Period 7</button></div><div id="leaderboardBody" style="margin-top:14px"></div><button id="closeLeaderboard" style="margin-top:14px">Close</button></div></div>
+
+<div class="modal" id="failModal"><div class="modalbox"><h2>Challenge Failed</h2><p>You reached the 16-miss limit.</p><button id="resetAfterFail">Try Again</button> <button id="quitAfterFail">End Game</button></div></div>
 
 <script>
+
 const pairs=[
 {id:"function-definition",a:`<div><div class="term">FUNCTION</div><div class="sub">What rule must be true?</div></div>`,b:`<div><div class="term">Every input has exactly one output.</div><div class="sub">Outputs may repeat.</div></div>`},
 {id:"domain",a:`<div><div class="term">DOMAIN</div><div class="sub">Which values?</div></div>`,b:`<div><div class="term">INPUT = x-values</div><div class="sub">Think LEFT ↔ RIGHT</div></div>`},
@@ -200,6 +225,7 @@ function flip(card,item){
   if(lock||card.classList.contains("matched"))return;
 
   if(gameMode==="practice"){
+    startTimer();
     if(card.classList.contains("selected")) return;
     card.classList.add("selected");
     if(!first){
@@ -215,7 +241,9 @@ function flip(card,item){
       second.card.querySelector(".back").style.background="";
       first.card.classList.remove("selected");second.card.classList.remove("selected");
       first.card.classList.add("matched");second.card.classList.add("matched");
-      first.card.disabled=true;second.card.disabled=true;matches++;
+      first.card.disabled=true;second.card.disabled=true;matches++;totalMatches++;moves++;attempts++;score+=10;
+      if(misses>0) misses--;
+      updateStats();
       msg.textContent="Match! Keep going.";
       first=second=null;
       if(matches===6){
@@ -223,7 +251,7 @@ function flip(card,item){
         else finishPractice();
       }
     }else{
-      lock=true;
+      moves++;attempts++;misses++;totalWrong++;score-=3;updateStats();lock=true;
       msg.textContent="Those tiles do not match. Try again.";
       setTimeout(()=>{
         first.card.querySelector(".back").style.background="";
@@ -266,6 +294,9 @@ function nextRound(){
   msg.textContent=gameMode==="practice"?"Round 2: Choose two revealed tiles that belong together.":"Round 2: Choose two tiles that belong together.";
 }
 function finishPractice(){
+  clearInterval(timerHandle);
+  timerEl.textContent=formatTime(elapsed());
+  updateStats();
   reviewMode=true;
   document.querySelectorAll(".card.matched").forEach(c=>{
     c.disabled=false;
@@ -384,9 +415,183 @@ document.getElementById("leaderboardBtn").addEventListener("click",()=>{leaderbo
 document.querySelectorAll(".lbFilter").forEach(b=>b.addEventListener("click",()=>loadLeaderboard(b.dataset.period)));
 document.getElementById("closeLeaderboard").addEventListener("click",()=>leaderboardModal.classList.remove("show"));
 
+
+
+/* Fresh UI bridge: preserve original game logic, control new visual sections. */
+const freshModeStage = document.getElementById("modeStage");
+const freshGameArea = document.getElementById("gameArea");
+function freshShowMode(){
+  freshModeStage.style.display="block";
+  freshGameArea.classList.remove("active");
+  modeModal.classList.add("show");
+}
+function freshEnterGame(){
+  freshModeStage.style.display="none";
+  freshGameArea.classList.add("active");
+}
+/* The compatibility modal is transparent; these observers keep the fresh screen in sync. */
+const originalChooseMode = chooseMode;
+chooseMode = function(mode){
+  freshEnterGame();
+  originalChooseMode(mode);
+};
+document.getElementById("newGameBtn").addEventListener("click",()=>{freshShowMode();});
+/* Let the visible SVG buttons drive the same original listeners. */
+modeModal.style.pointerEvents="none";
 </script>
 
-</div>
+<style id="mathxp-clean-final">
+/* Clean target-image pass */
+.header{min-height:125px}
+.header-actions{gap:14px;top:7px}
+.iconbtn{
+ width:92px;height:94px;padding:57px 4px 5px!important;
+ position:relative;border-radius:0!important;
+ clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);
+ background:linear-gradient(145deg,#06131d,#02070c)!important;
+ border:2px solid #19ddff!important;
+ filter:drop-shadow(0 0 5px rgba(25,221,255,.7));
+ box-shadow:none!important;
+}
+.iconbtn.newbtn{border-color:#ffc21a!important;filter:drop-shadow(0 0 5px rgba(255,194,26,.7))}
+.iconbtn .ico{position:absolute;left:0;right:0;top:13px;font-size:32px;margin:0}
+.btnlabel{display:block;font-size:9px;line-height:1.05;font-weight:1000;white-space:nowrap}
+.iconbtn:hover{transform:translateY(-2px);filter:brightness(1.22) drop-shadow(0 0 10px #19ddff)}
+.iconbtn.newbtn:hover{filter:brightness(1.22) drop-shadow(0 0 10px #ffc21a)}
 
-</body>
-</html>
+.mode-stage{padding-top:24px}
+.mode-grid{max-width:1240px;gap:18px}
+.mode-button{height:430px}
+.mode-button:after{display:none!important} /* remove diamond/background pattern */
+.mode-button svg{overflow:visible}
+.mode-button path{stroke-width:4.5}
+.mode-button.practice path{
+ fill:#020a11;
+ stroke:#19ddff;
+ filter:drop-shadow(0 0 4px #19ddff) drop-shadow(0 0 10px rgba(25,221,255,.72));
+}
+.mode-button.challenge path{
+ fill:#0b0801;
+ stroke:#ffc21a;
+ filter:drop-shadow(0 0 4px #ffc21a) drop-shadow(0 0 10px rgba(255,194,26,.72));
+}
+.mode-button.practice:hover{
+ transform:translateY(-7px) scale(1.018);
+}
+.mode-button.challenge:hover{
+ transform:translateY(-7px) scale(1.018);
+}
+/* Stronger arrow-outline glow on rollover */
+.mode-button.practice:hover path{
+ stroke-width:5.5;
+ filter:
+   drop-shadow(0 0 3px #fff)
+   drop-shadow(0 0 8px #19ddff)
+   drop-shadow(0 0 18px #19ddff)
+   drop-shadow(0 0 34px rgba(25,221,255,.95));
+}
+.mode-button.challenge:hover path{
+ stroke-width:5.5;
+ filter:
+   drop-shadow(0 0 3px #fff)
+   drop-shadow(0 0 8px #ffc21a)
+   drop-shadow(0 0 18px #ffc21a)
+   drop-shadow(0 0 34px rgba(255,194,26,.95));
+}
+.mode-content{z-index:3}
+.mode-icon{font-size:48px}
+.mode-name{font-size:37px}
+.mode-copy{font-size:20px;line-height:1.5}
+.mode-rule{width:70%}
+
+/* Keep the top right usable at normal Chromebook widths */
+@media(max-width:1180px){
+ .logo{font-size:34px}.logo small{font-size:8px}
+ .heading h1{font-size:45px}.heading p{font-size:13px}
+ .iconbtn{width:72px;height:78px;padding-top:48px!important}
+ .iconbtn .ico{font-size:26px;top:11px}.btnlabel{font-size:7px}
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+ const b=document.getElementById("soundBtn");
+ if(b){
+   let on=true;
+   b.addEventListener("click",function(){
+     on=!on;
+     b.querySelector(".ico").textContent=on?"🔊":"🔇";
+     b.setAttribute("aria-label",on?"Sound on":"Sound off");
+   });
+ }
+});
+</script>
+
+
+<style id="top-right-control-fix">
+.header-actions{
+  right:0!important;
+  top:5px!important;
+  gap:16px!important;
+  align-items:flex-start!important;
+}
+.iconbtn{
+  width:108px!important;
+  height:104px!important;
+  padding:66px 8px 8px!important;
+  clip-path:polygon(24% 0,76% 0,100% 50%,76% 100%,24% 100%,0 50%)!important;
+  background:linear-gradient(145deg,#07131e,#02070c)!important;
+  border:0!important;
+  position:relative!important;
+  overflow:visible!important;
+}
+.iconbtn:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  clip-path:inherit;
+  background:transparent;
+  border-top:2px solid #19ddff;
+  border-bottom:2px solid #19ddff;
+}
+.iconbtn.newbtn:after{border-color:#ffc21a}
+.iconbtn .ico{
+  position:absolute!important;
+  top:20px!important;
+  left:0!important;
+  right:0!important;
+  font-size:34px!important;
+  line-height:1!important;
+}
+.btnlabel{
+  display:block!important;
+  width:100%!important;
+  font-size:10px!important;
+  line-height:1.12!important;
+  font-weight:1000!important;
+  letter-spacing:.015em!important;
+  white-space:normal!important;
+  text-align:center!important;
+}
+.refbtn .btnlabel{font-size:9px!important}
+.iconbtn.refbtn,.iconbtn.soundbtn{
+  filter:drop-shadow(0 0 4px rgba(25,221,255,.55))!important;
+}
+.iconbtn.newbtn{
+  filter:drop-shadow(0 0 4px rgba(255,194,26,.55))!important;
+}
+.iconbtn.refbtn:hover,.iconbtn.soundbtn:hover{
+  filter:brightness(1.25) drop-shadow(0 0 11px #19ddff)!important;
+}
+.iconbtn.newbtn:hover{
+  filter:brightness(1.25) drop-shadow(0 0 11px #ffc21a)!important;
+}
+@media(max-width:1180px){
+  .iconbtn{width:84px!important;height:84px!important;padding:53px 5px 5px!important}
+  .iconbtn .ico{top:14px!important;font-size:28px!important}
+  .btnlabel{font-size:8px!important}
+  .refbtn .btnlabel{font-size:7px!important}
+}
+</style>
+
+</body></html>
