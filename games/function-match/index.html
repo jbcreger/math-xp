@@ -291,7 +291,7 @@ function flip(card,item){
       first.card.classList.remove("flipped");second.card.classList.remove("flipped");first=second=null;
       if(hit){clearInterval(timerHandle);failModal.classList.add("show")}
       else{lock=false;msg.textContent="Choose two tiles that belong together."}
-    },950);
+    },1500);
   }
 }
 function nextRound(){
